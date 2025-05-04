@@ -1,0 +1,23 @@
+1. open VM Ware Workstation
+2. select on ubuntu 64 bit and power on the virtual machine
+
+3. in show applications - open the terminal
+4. type - hadoop version
+5. type - java -version
+6. type - start-all.sh
+7. type - jps
+8. type - hadoop-3.4.0/bin/hdfs namenode -format
+9. type - start-all.sh
+
+10. open fire fox and type - localhost:9870/dfshealth.html
+
+11. go to applications and open intelliJ IDEA community edition 
+12. go to 3lines -> to file -> new -> project
+13. give name as -> lab2
+14. select as maven
+15. go to advance settings -> keep groupid -> org.datascience
+16. click on create
+17. click on this window
+18. right click on Main and delete -> select ok
+19. org.datascience is highlighted
+20. under it, </properties> type <dependencies> </dependencies>
