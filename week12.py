@@ -1,34 +1,44 @@
-
- install.packages("tidyr")
- library(ggplot2)
+ # Install necessary packages
+ install.packages(c("dplyr", "ggplot2", "gapminder"))
  library(dplyr)
- library(tidyr)
- library(stringr)
- # Step 1: Read data from the text file
- data <- read.csv("socialmedia.txt", stringsAsFactors = FALSE)
- # Step 2: Split hash tags into individual rows
- hashtag_data <- data %>%
- separate_rows(Hashtags, sep = ",") %>%
- mutate(Hashtags = str_trim(Hashtags))
- # Step 3: Hash tag Frequency Bar Chart
- hashtag_freq <- hashtag_data %>%
- group_by(Hashtags) %>%
- summarise(Frequency = n())
- ggplot(hashtag_freq, aes(x = reorder(Hashtags, Frequency), y = Frequency, fill = Hashtags)) +
- geom_bar(stat = "identity") +
- coord_flip() +
- labs(title = "Hashtag Frequency", x = "Hashtag", y = "Count") +
+ library(ggplot2)
+ library(gapminder)
+ #Load the Gapminder Dataset
+ data(gapminder)
+ head(gapminder) # View the first few rows
+ # Exploring the Data
+ summary(gapminder)
+ # Filter for the year 2007 (the most recent in the dataset)
+ gapminder_2007 <- filter(gapminder, year == 2007)
+ # View the data for 2007
+ head(gapminder_2007)
+ #Statistical Analysis
+ #Average Life Expectancy by Continent
+ life_expectancy_by_continent <- gapminder %>%
+ group_by(continent) %>%
+ summarize(avg_lifeExp = mean(lifeExp, na.rm = TRUE))
+ print(life_expectancy_by_continent)
+ # GDPandLife Expectancy Correlation
+ cor(gapminder$gdpPercap, gapminder$lifeExp, use = "complete.obs")
+ #Linear Regression (Life Expectancy ~ GDP)
+ model <- lm(lifeExp ~ gdpPercap, data = gapminder)
+ summary(model)
+ #Visualization
+ #GDP vs. Life Expectancy
+ ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+ geom_point(aes(color = continent), alpha = 0.7) +
+ scale_x_log10() +
+ labs(title = "GDP vs Life Expectancy") +
  theme_minimal()
- # Step 4: Sentiment Pie Chart
- sentiment_freq <- data %>%
- count(Sentiment)
- ggplot(sentiment_freq, aes(x = "", y = n, fill = Sentiment)) +
- geom_col(width = 1) +
- coord_polar(theta = "y") +
- labs(title = "Tweet Sentiment Distribution") +
- theme_void()
- # Step 5: Scatter Plot of Likes vs. Retweets
- ggplot(data, aes(x = Likes, y = Retweets, color = Sentiment)) +
- geom_point(size = 4) +
- labs(title = "Engagement: Likes vs. Retweets", x = "Likes", y = "Retweets")+
+ #Life Expectancy Over Time (by Continent)
+ ggplot(gapminder, aes(x = year, y = lifeExp, color = continent)) +
+ geom_line() +
+ labs(title = "Life Expectancy Over Time") +
+ theme_minimal()
+ #GDP vs. Population (2007)
+ gapminder_2007 <- filter(gapminder, year == 2007)
+ ggplot(gapminder_2007, aes(x = gdpPercap, y = pop)) +
+ geom_point(aes(color = continent), alpha = 0.7) +
+ scale_x_log10() + scale_y_log10() +
+ labs(title = "GDP vs Population (2007)") +
  theme_minimal()
